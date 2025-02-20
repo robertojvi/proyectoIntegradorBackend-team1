@@ -1,13 +1,13 @@
-package com.example.backendProyectoIntegrador;
+package com.petcare.backend.proyectoIntegrador;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendProyectoIntegradorApplication {
+public class ProyectoIntegradorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendProyectoIntegradorApplication.class, args);
+		SpringApplication.run(ProyectoIntegradorApplication.class, args);
 	}
 
 }

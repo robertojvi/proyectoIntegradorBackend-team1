@@ -1,10 +1,10 @@
-package com.example.backendProyectoIntegrador;
+package com.petcare.backend.proyectoIntegrador;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BackendProyectoIntegradorApplicationTests {
+class ProyectoIntegradorApplicationTests {
 
 	@Test
 	void contextLoads() {
