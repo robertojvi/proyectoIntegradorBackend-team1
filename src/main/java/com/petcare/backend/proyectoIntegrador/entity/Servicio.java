@@ -48,4 +48,8 @@ public class Servicio {
     
     @OneToMany(mappedBy = "servicio")
     private List<DetallePedido> detallePedidos;
+    
+    @ManyToOne
+    @JoinColumn(name = "id_establecimiento")
+    private Establecimiento establecimiento;
 } 
