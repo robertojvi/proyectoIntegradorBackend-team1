@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface IPedidoRepository extends JpaRepository<Pedido, Short> {
+    @Query("SELECT p FROM Pedido p WHERE p.usuario.idUsuario = :usuarioId")
     List<Pedido> findByUsuarioId(Short usuarioId);
     
     List<Pedido> findByEstado(String estado);

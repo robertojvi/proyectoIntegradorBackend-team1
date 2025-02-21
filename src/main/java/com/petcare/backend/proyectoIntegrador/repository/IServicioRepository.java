@@ -15,7 +15,10 @@ public interface IServicioRepository extends JpaRepository<Servicio, Short> {
     List<Servicio> findByDisponibilidad(String disponibilidad);
     
     @Query("SELECT s FROM Servicio s WHERE s.precio <= :precioMaximo")
-    List<Servicio> findByPrecioMenorIgual(BigDecimal precioMaximo);
+    List<Servicio> findByPrecioLessThanEqual(BigDecimal precioMaximo);
+    
+    @Query("SELECT s FROM Servicio s WHERE s.establecimiento.idEstablecimiento = :establecimientoId")
+    List<Servicio> findByEstablecimientoId(Short establecimientoId);
     
     @Query("SELECT s FROM Servicio s WHERE s.esBorrado = false")
     List<Servicio> findActivos();

@@ -9,10 +9,13 @@ import java.util.List;
 
 @Repository
 public interface IReservaRepository extends JpaRepository<Reserva, Short> {
+    @Query("SELECT r FROM Reserva r WHERE r.usuario.idUsuario = :usuarioId")
     List<Reserva> findByUsuarioId(Short usuarioId);
     
+    @Query("SELECT r FROM Reserva r WHERE r.mascota.idMascota = :mascotaId")
     List<Reserva> findByMascotaId(Short mascotaId);
     
+    @Query("SELECT r FROM Reserva r WHERE r.establecimiento.idEstablecimiento = :establecimientoId")
     List<Reserva> findByEstablecimientoId(Short establecimientoId);
     
     List<Reserva> findByEstado(String estado);

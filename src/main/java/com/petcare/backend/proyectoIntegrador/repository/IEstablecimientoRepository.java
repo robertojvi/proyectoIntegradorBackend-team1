@@ -16,4 +16,7 @@ public interface IEstablecimientoRepository extends JpaRepository<Establecimient
     
     @Query("SELECT e FROM Establecimiento e WHERE e.esBorrado = false")
     List<Establecimiento> findActivos();
+
+    @Query("SELECT e FROM Establecimiento e WHERE e.usuario.idUsuario = :usuarioId")
+    List<Establecimiento> findByUsuarioId(Short usuarioId);
 } 

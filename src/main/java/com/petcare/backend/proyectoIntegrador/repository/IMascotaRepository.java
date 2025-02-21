@@ -13,6 +13,7 @@ public interface IMascotaRepository extends JpaRepository<Mascota, Short> {
     
     List<Mascota> findByEspecie(String especie);
     
+    @Query("SELECT m FROM Mascota m WHERE m.usuario.idUsuario = :usuarioId")
     List<Mascota> findByUsuarioId(Short usuarioId);
     
     @Query("SELECT m FROM Mascota m WHERE m.esBorrado = false")
