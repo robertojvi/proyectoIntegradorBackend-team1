@@ -20,8 +20,12 @@ public class ServicioController {
 
     @PostMapping
     public ResponseEntity<Servicio> crear(@RequestBody Servicio servicio) {
+        System.out.println("Recibiendo petición POST en /servicios");
+        System.out.println("Servicio recibido: " + servicio);
+        
         // Validaciones básicas
         if (servicio.getNombre() == null || servicio.getNombre().trim().isEmpty()) {
+            System.out.println("Error: nombre vacío");
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (servicio.getPrecio() == null || servicio.getPrecio().compareTo(BigDecimal.ZERO) <= 0) {
