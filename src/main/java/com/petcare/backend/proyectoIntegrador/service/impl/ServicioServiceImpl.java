@@ -22,6 +22,7 @@ public class ServicioServiceImpl implements IServicioService {
         servicio.setFechaRegistro(LocalDateTime.now());
         servicio.setFechaActualizacion(LocalDateTime.now());
         servicio.setEsBorrado(false);
+        servicio.setDisponibilidad("DISPONIBLE"); // Valor por defecto
         return servicioRepository.save(servicio);
     }
     
@@ -47,7 +48,7 @@ public class ServicioServiceImpl implements IServicioService {
     
     @Override
     public List<Servicio> buscarPorPrecioMenorIgual(BigDecimal precioMaximo) {
-        return servicioRepository.findByPrecioMenorIgual(precioMaximo);
+        return servicioRepository.findByPrecioLessThanEqual(precioMaximo);
     }
     
     @Override

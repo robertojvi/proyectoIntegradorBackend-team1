@@ -21,6 +21,13 @@ public class EstablecimientoServiceImpl implements IEstablecimientoService {
         establecimiento.setFechaRegistro(LocalDateTime.now());
         establecimiento.setFechaActualizacion(LocalDateTime.now());
         establecimiento.setEsBorrado(false);
+        establecimiento.setEstado("ACTIVO"); // Valor por defecto al crear
+        if (establecimiento.getHorarioApertura() == null) {
+            establecimiento.setHorarioApertura("09:00"); // Horario por defecto
+        }
+        if (establecimiento.getHorarioCierre() == null) {
+            establecimiento.setHorarioCierre("18:00"); // Horario por defecto
+        }
         return establecimientoRepository.save(establecimiento);
     }
     
@@ -59,5 +66,10 @@ public class EstablecimientoServiceImpl implements IEstablecimientoService {
             e.setFechaBorrado(LocalDateTime.now());
             establecimientoRepository.save(e);
         }
+    }
+
+    @Override
+    public List<Establecimiento> listarPorUsuario(Short usuarioId) {
+        return establecimientoRepository.findByUsuarioId(usuarioId);
     }
 } 

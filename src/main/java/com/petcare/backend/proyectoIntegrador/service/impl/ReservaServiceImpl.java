@@ -21,6 +21,10 @@ public class ReservaServiceImpl implements IReservaService {
         reserva.setFechaRegistro(LocalDateTime.now());
         reserva.setFechaActualizacion(LocalDateTime.now());
         reserva.setEsBorrado(false);
+        reserva.setEstado("PENDIENTE"); // Valor por defecto al crear
+        if (reserva.getFecha() == null) {
+            reserva.setFecha(LocalDateTime.now()); // Fecha actual si no se especifica
+        }
         return reservaRepository.save(reserva);
     }
     

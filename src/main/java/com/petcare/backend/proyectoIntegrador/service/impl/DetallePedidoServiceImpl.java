@@ -21,6 +21,12 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         detallePedido.setFechaRegistro(LocalDateTime.now());
         detallePedido.setFechaActualizacion(LocalDateTime.now());
         detallePedido.setEsBorrado(false);
+        
+        // Si la cantidad es 0 o negativa, establecer a 1
+        if (detallePedido.getCantidad() <= 0) {
+            detallePedido.setCantidad((short) 1);
+        }
+        
         return detallePedidoRepository.save(detallePedido);
     }
     

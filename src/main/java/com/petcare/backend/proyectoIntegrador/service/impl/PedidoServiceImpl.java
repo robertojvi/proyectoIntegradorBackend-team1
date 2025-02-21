@@ -21,6 +21,7 @@ public class PedidoServiceImpl implements IPedidoService {
         pedido.setFechaRegistro(LocalDateTime.now());
         pedido.setFechaActualizacion(LocalDateTime.now());
         pedido.setEsBorrado(false);
+        pedido.setEstado("PENDIENTE"); // Valor por defecto al crear
         return pedidoRepository.save(pedido);
     }
     
