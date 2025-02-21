@@ -12,4 +12,5 @@ public interface IEstablecimientoService {
     List<Establecimiento> buscarPorDireccion(String direccion);
     Establecimiento actualizar(Establecimiento establecimiento);
     void eliminar(Short id);
+    List<Establecimiento> listarPorUsuario(Short usuarioId);
 } 
