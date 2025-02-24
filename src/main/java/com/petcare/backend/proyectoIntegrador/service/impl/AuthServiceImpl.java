@@ -8,12 +8,11 @@ import com.petcare.backend.proyectoIntegrador.entity.Usuario;
 import com.petcare.backend.proyectoIntegrador.repository.IUsuarioRepository;
 import com.petcare.backend.proyectoIntegrador.service.IAuthService;
 import com.petcare.backend.proyectoIntegrador.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements IAuthService {
@@ -31,7 +30,7 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     public AuthResponse register(RegisterRequest request) {
         if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("El correo ya está registrado.");
+            return new AuthResponse(null, null, null, null, "El correo ya está registrado.");
         }
         Usuario usuario = Usuario.builder()
                 .nombre(request.getNombre())
@@ -45,19 +44,22 @@ public class AuthServiceImpl implements IAuthService {
         usuarioRepository.save(usuario);
         String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getRol().toString());
 
-        return new AuthResponse(token, usuario.getRol(), usuario.getNombre());
+        return new AuthResponse(token, usuario.getRol(), usuario.getNombre(), "Usuario creado correctamente", null);
     }
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        Usuario usuario = usuarioRepository. findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        if (!passwordEncoder.matches(request.getContrasenia(), usuario.getContrasenia())) {
-            throw new RuntimeException("Credenciales inválidas");
+        Optional<Usuario> usuario = usuarioRepository. findByEmail(request.getEmail());
+        if (usuario.isEmpty()) {
+            return new AuthResponse(null, null, null, null, "Usuario no encontrado");
         }
 
-        String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getRol().toString());
-        return new AuthResponse(token, usuario.getRol(), usuario.getNombre());
+
+        if (!passwordEncoder.matches(request.getContrasenia(), usuario.get().getContrasenia())) {
+            return new AuthResponse(null, null, null, null, "Credenciales inválidas");
+        }
+
+        String token = jwtUtil.generateToken(usuario.get().getEmail(), usuario.get().getRol().toString());
+        return new AuthResponse(token, usuario.get().getRol(), usuario.get().getNombre(), "Usuario autenticado correctamente", null);
     }
 }
