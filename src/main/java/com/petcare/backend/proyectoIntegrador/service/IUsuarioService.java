@@ -1,5 +1,6 @@
 package com.petcare.backend.proyectoIntegrador.service;
 
+import com.petcare.backend.proyectoIntegrador.entity.ERole;
 import com.petcare.backend.proyectoIntegrador.entity.Usuario;
 import java.util.List;
 import java.util.Optional;
@@ -12,5 +13,5 @@ public interface IUsuarioService {
     Optional<Usuario> buscarPorEmail(String email);
     Usuario actualizar(Usuario usuario);
     void eliminar(Short id);
-    List<Usuario> listarPorRol(String rol);
+    List<Usuario> listarPorRol(ERole rol);
 } 

@@ -1,5 +1,6 @@
 package com.petcare.backend.proyectoIntegrador.service.impl;
 
+import com.petcare.backend.proyectoIntegrador.entity.ERole;
 import com.petcare.backend.proyectoIntegrador.entity.Usuario;
 import com.petcare.backend.proyectoIntegrador.repository.IUsuarioRepository;
 import com.petcare.backend.proyectoIntegrador.service.IUsuarioService;
@@ -62,7 +63,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
     }
     
     @Override
-    public List<Usuario> listarPorRol(String rol) {
+    public List<Usuario> listarPorRol(ERole rol) {
         return usuarioRepository.findByRol(rol);
     }
 } 

@@ -1,7 +1,9 @@
 package com.petcare.backend.proyectoIntegrador.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -11,6 +13,11 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "usuario")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Usuario {
     
     @Id
@@ -26,9 +33,10 @@ public class Usuario {
     
     @Column(name = "contrasenia")
     private String contrasenia;
-    
-    @Column(name = "rol")
-    private String rol; // TODO: Convertir a enum (ADMIN, CLIENTE)
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "rol", nullable = false)
+    private ERole rol; // TODO: Convertir a enum (ADMIN, CLIENTE)
     
     @Column(name = "telefono")
     private String telefono;
@@ -58,4 +66,4 @@ public class Usuario {
      */
     @OneToMany(mappedBy = "usuario")
     private List<Pedido> pedidos;
-} 
+}

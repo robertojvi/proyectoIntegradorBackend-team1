@@ -1,5 +1,6 @@
 package com.petcare.backend.proyectoIntegrador.controller;
 
+import com.petcare.backend.proyectoIntegrador.entity.ERole;
 import com.petcare.backend.proyectoIntegrador.entity.Usuario;
 import com.petcare.backend.proyectoIntegrador.service.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/rol/{rol}")
-    public ResponseEntity<List<Usuario>> listarPorRol(@PathVariable String rol) {
+    public ResponseEntity<List<Usuario>> listarPorRol(@PathVariable ERole rol) {
         return new ResponseEntity<>(usuarioService.listarPorRol(rol), HttpStatus.OK);
     }
 
