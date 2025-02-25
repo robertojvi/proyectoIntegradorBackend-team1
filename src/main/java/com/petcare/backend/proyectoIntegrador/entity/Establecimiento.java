@@ -29,7 +29,7 @@ public class Establecimiento {
     private String telefono;
     
     @Column(name = "horario")
-    private String horario;
+    private String horario;  // Ejemplo: "Lun-Vie: 9:00-18:00, Sab: 9:00-13:00"
     
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro;
@@ -42,6 +42,16 @@ public class Establecimiento {
     
     @Column(name = "fecha_borrado")
     private LocalDateTime fechaBorrado;
+    
+    @Column(name = "estado")
+    private String estado;
+    
+    /**
+     * Usuario administrador del establecimiento
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
     
     /**
      * Lista de reservas programadas en el establecimiento.

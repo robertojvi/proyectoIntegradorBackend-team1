@@ -3,6 +3,7 @@ package com.petcare.backend.proyectoIntegrador.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * Entidad que representa a un usuario del sistema.

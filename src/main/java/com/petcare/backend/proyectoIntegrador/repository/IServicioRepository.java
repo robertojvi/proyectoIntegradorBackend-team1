@@ -3,6 +3,7 @@ package com.petcare.backend.proyectoIntegrador.repository;
 import com.petcare.backend.proyectoIntegrador.entity.Servicio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,7 +19,7 @@ public interface IServicioRepository extends JpaRepository<Servicio, Short> {
     List<Servicio> findByPrecioLessThanEqual(BigDecimal precioMaximo);
     
     @Query("SELECT s FROM Servicio s WHERE s.establecimiento.idEstablecimiento = :establecimientoId")
-    List<Servicio> findByEstablecimientoId(Short establecimientoId);
+    List<Servicio> findByEstablecimientoId(@Param("establecimientoId") Short establecimientoId);
     
     @Query("SELECT s FROM Servicio s WHERE s.esBorrado = false")
     List<Servicio> findActivos();

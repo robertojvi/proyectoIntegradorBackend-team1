@@ -49,6 +49,9 @@ public class EstablecimientoController {
         return establecimientoService.obtenerPorId(id)
                 .map(establecimientoExistente -> {
                     establecimiento.setIdEstablecimiento(id);
+                    establecimiento.setFechaRegistro(establecimientoExistente.getFechaRegistro());
+                    establecimiento.setEsBorrado(establecimientoExistente.isEsBorrado());
+                    establecimiento.setFechaBorrado(establecimientoExistente.getFechaBorrado());
                     return new ResponseEntity<>(establecimientoService.actualizar(establecimiento), HttpStatus.OK);
                 })
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
