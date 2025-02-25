@@ -2,6 +2,9 @@ package com.petcare.backend.proyectoIntegrador.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +15,8 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "servicio")
+@Getter
+@Setter
 public class Servicio {
     
     @Id

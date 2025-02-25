@@ -2,6 +2,9 @@ package com.petcare.backend.proyectoIntegrador.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -12,36 +15,47 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "establecimiento")
+@Getter
+@Setter
 public class Establecimiento {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_establecimiento")
     private short idEstablecimiento;
-    
+
     @Column(name = "nombre")
     private String nombre;
-    
+
     @Column(name = "direccion")
     private String direccion;
-    
+
     @Column(name = "telefono")
     private String telefono;
-    
+
     @Column(name = "horario")
-    private String horario;  // Ejemplo: "Lun-Vie: 9:00-18:00, Sab: 9:00-13:00"
-    
+
+  private String horario;
+
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro;
-    
+
     @Column(name = "fecha_actualizacion")
     private LocalDateTime fechaActualizacion;
-    
+
     @Column(name = "es_borrado")
     private boolean esBorrado;
-    
+
     @Column(name = "fecha_borrado")
     private LocalDateTime fechaBorrado;
+
+    /**
+     * Relación con la entidad Usuario (Cada establecimiento pertenece a un usuario).
+     */
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", referencedColumnName = "id_usuario")
+    private Usuario usuario;
+
     
     @Column(name = "estado")
     private String estado;
@@ -58,4 +72,4 @@ public class Establecimiento {
      */
     @OneToMany(mappedBy = "establecimiento")
     private List<Reserva> reservas;
-} 
+}

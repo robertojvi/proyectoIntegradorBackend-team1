@@ -14,8 +14,11 @@ import java.util.Optional;
 @Service
 public class ServicioServiceImpl implements IServicioService {
 
-    @Autowired
-    private IServicioRepository servicioRepository;
+    private final IServicioRepository servicioRepository;
+
+    ServicioServiceImpl(IServicioRepository servicioRepository) {
+        this.servicioRepository = servicioRepository;
+    }
     
     @Override
     public Servicio crear(Servicio servicio) {

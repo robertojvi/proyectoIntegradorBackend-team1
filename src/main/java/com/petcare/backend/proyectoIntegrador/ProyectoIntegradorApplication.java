@@ -7,9 +7,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.petcare.backend.proyectoIntegrador.repository")
+//@EnableJpaRepositories(basePackages = "com.petcare.backend.proyectoIntegrador.repository")
 @EnableTransactionManagement
-@ComponentScan(basePackages = "com.petcare.backend.proyectoIntegrador")
 public class ProyectoIntegradorApplication {
 
 	public static void main(String[] args) {

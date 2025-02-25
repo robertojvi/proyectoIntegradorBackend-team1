@@ -2,6 +2,7 @@ package com.petcare.backend.proyectoIntegrador.controller;
 
 import com.petcare.backend.proyectoIntegrador.entity.Establecimiento;
 import com.petcare.backend.proyectoIntegrador.service.IEstablecimientoService;
+import com.petcare.backend.proyectoIntegrador.service.impl.EstablecimientoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,11 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class EstablecimientoController {
 
-    @Autowired
-    private IEstablecimientoService establecimientoService;
+    private final IEstablecimientoService establecimientoService;
+
+    EstablecimientoController() {
+        this.establecimientoService = new EstablecimientoServiceImpl();
+    }
 
     @PostMapping
     public ResponseEntity<Establecimiento> crear(@RequestBody Establecimiento establecimiento) {
