@@ -21,9 +21,11 @@ public class EstablecimientoServiceImpl implements IEstablecimientoService {
         establecimiento.setFechaRegistro(LocalDateTime.now());
         establecimiento.setFechaActualizacion(LocalDateTime.now());
         establecimiento.setEsBorrado(false);
+
         //establecimiento.setEstado("ACTIVO"); // Valor por defecto al crear
         if (establecimiento.getHorario() == null) {
             establecimiento.setHorario("09:00"); // Horario por defecto
+
         }
 //        if (establecimiento.getHorarioCierre() == null) {
 //            establecimiento.setHorarioCierre("18:00"); // Horario por defecto

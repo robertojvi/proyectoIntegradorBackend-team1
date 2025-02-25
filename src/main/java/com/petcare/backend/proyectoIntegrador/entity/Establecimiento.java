@@ -34,7 +34,8 @@ public class Establecimiento {
     private String telefono;
 
     @Column(name = "horario")
-    private String horario;
+
+  private String horario;
 
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro;
@@ -55,6 +56,17 @@ public class Establecimiento {
     @JoinColumn(name = "usuario_id", referencedColumnName = "id_usuario")
     private Usuario usuario;
 
+    
+    @Column(name = "estado")
+    private String estado;
+    
+    /**
+     * Usuario administrador del establecimiento
+     */
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+    
     /**
      * Lista de reservas programadas en el establecimiento.
      */

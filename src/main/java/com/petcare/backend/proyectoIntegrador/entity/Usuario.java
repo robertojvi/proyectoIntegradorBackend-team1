@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.time.LocalDateTime;
 
 /**
  * Entidad que representa a un usuario del sistema.
