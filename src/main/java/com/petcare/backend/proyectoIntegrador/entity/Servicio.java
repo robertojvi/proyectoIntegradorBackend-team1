@@ -57,4 +57,7 @@ public class Servicio {
     @ManyToOne
     @JoinColumn(name = "id_establecimiento")
     private Establecimiento establecimiento;
+
+    @ManyToMany(mappedBy = "favoritos")
+    private List<Usuario> usuariosQueLoMarcaron;
 } 

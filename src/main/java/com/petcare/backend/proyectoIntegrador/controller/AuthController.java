@@ -4,7 +4,6 @@ import com.petcare.backend.proyectoIntegrador.DTO.AuthResponse;
 import com.petcare.backend.proyectoIntegrador.DTO.LoginRequest;
 import com.petcare.backend.proyectoIntegrador.DTO.RegisterRequest;
 import com.petcare.backend.proyectoIntegrador.service.IAuthService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

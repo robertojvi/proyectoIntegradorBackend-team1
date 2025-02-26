@@ -59,14 +59,7 @@ public class Establecimiento {
     
     @Column(name = "estado")
     private String estado;
-    
-    /**
-     * Usuario administrador del establecimiento
-     */
-    @ManyToOne
-    @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
-    
+
     /**
      * Lista de reservas programadas en el establecimiento.
      */

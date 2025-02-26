@@ -1,9 +1,10 @@
 package com.petcare.backend.proyectoIntegrador.controller;
 
+import com.petcare.backend.proyectoIntegrador.DTO.UserProfileResponse;
+import com.petcare.backend.proyectoIntegrador.config.JwtService;
 import com.petcare.backend.proyectoIntegrador.entity.ERole;
 import com.petcare.backend.proyectoIntegrador.entity.Usuario;
 import com.petcare.backend.proyectoIntegrador.service.IUsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("api/usuarios")
 @CrossOrigin(origins = "*")
 public class UsuarioController {
+    private final JwtService jwtService;
+    private final IUsuarioService usuarioService;
 
-    @Autowired
-    private IUsuarioService usuarioService;
+    public UsuarioController(JwtService jwtService, IUsuarioService usuarioService) {
+        this.jwtService = jwtService;
+        this.usuarioService = usuarioService;
+    }
 
     @PostMapping
     public ResponseEntity<Usuario> crear(@RequestBody Usuario usuario) {
@@ -47,9 +52,9 @@ public class UsuarioController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/rol/{rol}")
-    public ResponseEntity<List<Usuario>> listarPorRol(@PathVariable ERole rol) {
-        return new ResponseEntity<>(usuarioService.listarPorRol(rol), HttpStatus.OK);
+    @GetMapping("/role/{role}")
+    public ResponseEntity<List<Usuario>> listarPorRole(@PathVariable ERole role) {
+        return new ResponseEntity<>(usuarioService.listarPorRole(role), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -62,6 +67,16 @@ public class UsuarioController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @PatchMapping("/{id}/{role}")
+    public ResponseEntity<Usuario> actualizarRole(@PathVariable Short id, @PathVariable ERole role) {
+        return usuarioService.obtenerPorId(id)
+                .map(usuarioExistente -> {
+                    usuarioExistente.setRole(role);
+                    return new ResponseEntity<>(usuarioService.actualizar(usuarioExistente), HttpStatus.OK);
+                })
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Short id) {
         if (usuarioService.obtenerPorId(id).isPresent()) {
@@ -69,5 +84,17 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> getUserProfile(@RequestHeader("Authorization") String token) {
+        String email = jwtService.extractUsername(token.replace("Bearer ", ""));
+        System.out.println(email);
+        Usuario usuario = usuarioService.buscarPorEmail(email).orElseThrow();
+        System.out.println(usuario.getEmail());
+        System.out.println(usuario.getNombre());
+        System.out.println(usuario.getRole());
+
+        return ResponseEntity.ok(new UserProfileResponse(usuario));
     }
 } 

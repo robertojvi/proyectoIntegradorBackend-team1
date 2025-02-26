@@ -13,5 +13,5 @@ public interface IUsuarioService {
     Optional<Usuario> buscarPorEmail(String email);
     Usuario actualizar(Usuario usuario);
     void eliminar(Short id);
-    List<Usuario> listarPorRol(ERole rol);
+    List<Usuario> listarPorRole(ERole role);
 } 
