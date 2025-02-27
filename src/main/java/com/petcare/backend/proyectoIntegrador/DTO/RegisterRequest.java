@@ -14,7 +14,7 @@ public class RegisterRequest {
     private String apellido;
     private String email;
     private String contrasenia;
-    private ERole rol;
+    private ERole role;
     private String telefono;
     private LocalDateTime fechaRegistro;
     private LocalDateTime fechaActualizacion;

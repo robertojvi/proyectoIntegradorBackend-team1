@@ -3,11 +3,11 @@ package com.petcare.backend.proyectoIntegrador.service.impl;
 import com.petcare.backend.proyectoIntegrador.DTO.AuthResponse;
 import com.petcare.backend.proyectoIntegrador.DTO.LoginRequest;
 import com.petcare.backend.proyectoIntegrador.DTO.RegisterRequest;
+import com.petcare.backend.proyectoIntegrador.config.JwtService;
 import com.petcare.backend.proyectoIntegrador.entity.ERole;
 import com.petcare.backend.proyectoIntegrador.entity.Usuario;
-import com.petcare.backend.proyectoIntegrador.repository.IUsuarioRepository;
 import com.petcare.backend.proyectoIntegrador.service.IAuthService;
-import com.petcare.backend.proyectoIntegrador.util.JwtUtil;
+import com.petcare.backend.proyectoIntegrador.service.IUsuarioService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,49 +17,51 @@ import java.util.Optional;
 @Service
 public class AuthServiceImpl implements IAuthService {
 
-    private final IUsuarioRepository usuarioRepository;
+    private final IUsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
+    private final JwtService jwtService;
 
-    public AuthServiceImpl(IUsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.usuarioRepository = usuarioRepository;
+
+    public AuthServiceImpl(IUsuarioService usuarioService, PasswordEncoder passwordEncoder, JwtService jwtService) {
+        this.usuarioService = usuarioService;
         this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+        this.jwtService = jwtService;
     }
 
     @Override
     public AuthResponse register(RegisterRequest request) {
-        if (usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (usuarioService.buscarPorEmail(request.getEmail()).isPresent()) {
             return new AuthResponse(null, null, null, null, null, "El correo ya está registrado.");
         }
+
         Usuario usuario = Usuario.builder()
                 .nombre(request.getNombre())
+                .apellido(request.getApellido())
                 .email(request.getEmail())
                 .contrasenia(passwordEncoder.encode(request.getContrasenia()))
-                .rol(request.getRol() != null ? request.getRol() : ERole.CLIENTE)
+                .role(request.getRole() != null ? request.getRole() : ERole.CLIENTE)
                 .telefono(request.getTelefono())
                 .fechaRegistro(LocalDateTime.now())
                 .build();
 
-        usuarioRepository.save(usuario);
-        String token = jwtUtil.generateToken(usuario.getEmail(), usuario.getRol().toString());
+        usuarioService.crear(usuario);
+        String token = jwtService.generateToken(usuario.getEmail());
 
-        return new AuthResponse(token, usuario.getRol(), usuario.getNombre(), usuario.getApellido(), "Usuario creado correctamente", null);
+        return new AuthResponse(token, usuario.getRole(), usuario.getNombre(), usuario.getApellido(), "Usuario creado correctamente", null);
     }
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        Optional<Usuario> usuario = usuarioRepository. findByEmail(request.getEmail());
+        Optional<Usuario> usuario = usuarioService.buscarPorEmail(request.getEmail());
         if (usuario.isEmpty()) {
-            return new AuthResponse(null, null, null, null, null,"Usuario no encontrado");
+            return new AuthResponse(null, null, null, null, null, "Usuario no encontrado");
         }
-
 
         if (!passwordEncoder.matches(request.getContrasenia(), usuario.get().getContrasenia())) {
             return new AuthResponse(null, null, null, null, null, "Credenciales inválidas");
         }
 
-        String token = jwtUtil.generateToken(usuario.get().getEmail(), usuario.get().getRol().toString());
-        return new AuthResponse(token, usuario.get().getRol(), usuario.get().getNombre(), usuario.get().getApellido(), "Usuario autenticado correctamente", null);
+        String token = jwtService.generateToken(usuario.get().getEmail());
+        return new AuthResponse(token, usuario.get().getRole(), usuario.get().getNombre(), usuario.get().getApellido(), "Usuario autenticado correctamente", null);
     }
 }

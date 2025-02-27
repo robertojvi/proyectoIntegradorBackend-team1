@@ -16,7 +16,7 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Short> {
     
     Optional<Usuario> findByEmail(String email);
 
-    List<Usuario> findByRol(ERole rol);
+    List<Usuario> findByRole(ERole role);
 
     @Query("SELECT u FROM Usuario u WHERE u.esBorrado = false")
     List<Usuario> findActivos();

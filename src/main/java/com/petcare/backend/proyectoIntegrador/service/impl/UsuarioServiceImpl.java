@@ -63,7 +63,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
     }
     
     @Override
-    public List<Usuario> listarPorRol(ERole rol) {
-        return usuarioRepository.findByRol(rol);
+    public List<Usuario> listarPorRole(ERole role) {
+        return usuarioRepository.findByRole(role);
     }
 } 
