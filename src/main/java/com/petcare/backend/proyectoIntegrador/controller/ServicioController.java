@@ -1,46 +1,83 @@
 package com.petcare.backend.proyectoIntegrador.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.petcare.backend.proyectoIntegrador.DTO.ServicioRequest;
+import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponse;
+import com.petcare.backend.proyectoIntegrador.config.S3Service;
 import com.petcare.backend.proyectoIntegrador.entity.Servicio;
 import com.petcare.backend.proyectoIntegrador.service.IServicioService;
 import com.petcare.backend.proyectoIntegrador.service.impl.ServicioServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/servicios")
 @CrossOrigin(origins = "*")
 public class ServicioController {
-
+    private static final String UPLOAD_DIR = "uploads/";
     private final IServicioService servicioService;
+    private final S3Service s3Service;
 
-    ServicioController(ServicioServiceImpl servicioService) {
+    ServicioController(ServicioServiceImpl servicioService, S3Service s3Service) {
         this.servicioService = servicioService;
+        this.s3Service = s3Service;
     }
 
-    @PostMapping
-    public ResponseEntity<Servicio> crear(@RequestBody Servicio servicio) {
-        System.out.println("Recibiendo petición POST en /servicios");
-        System.out.println("Servicio recibido: " + servicio);
-        
-        // Validaciones básicas
-        if (servicio.getNombre() == null || servicio.getNombre().trim().isEmpty()) {
-            System.out.println("Error: nombre vacío");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        if (servicio.getPrecio() == null || servicio.getPrecio().compareTo(BigDecimal.ZERO) <= 0) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        
+    @PostMapping(value = "/servicio", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public String crearServicio(
+            @RequestPart("datos") String datosJson,
+            @RequestPart("imagenes") List<MultipartFile> imagenes) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ServicioRequest servicioDTO;
+
         try {
-            Servicio nuevoServicio = servicioService.crear(servicio);
-            return new ResponseEntity<>(nuevoServicio, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            servicioDTO = objectMapper.readValue(datosJson, ServicioRequest.class);
+        } catch (IOException e) {
+            return "Error al deserializar el JSON: " + e.getMessage();
+        }
+
+        List<String> imageUrls = new ArrayList<>();
+
+        try {
+            Files.createDirectories(Paths.get(UPLOAD_DIR));
+
+            // Guardar cada imagen y obtener su URL
+            for (MultipartFile file : imagenes) {
+                byte[] fileBytes = file.getBytes();
+                String imageUrl = s3Service.uploadFile(fileBytes, file.getOriginalFilename());
+                imageUrls.add(imageUrl);
+            }
+
+            String imagenUrlJson = objectMapper.writeValueAsString(imageUrls);
+
+            Servicio servicio = new Servicio();
+            servicio.setNombre(servicioDTO.getNombre());
+            servicio.setDescripcion(servicioDTO.getDescripcion());
+            servicio.setPrecio(servicioDTO.getPrecio());
+            servicio.setImagenUrl(imagenUrlJson);
+
+            servicioService.crear(servicio);
+
+            return "Servicio creado con éxito con imágenes en: " + imageUrls;
+        } catch (IOException e) {
+            return "Error al subir las imágenes: " + e.getMessage();
         }
     }
 
@@ -50,13 +87,48 @@ public class ServicioController {
                 .map(servicio -> new ResponseEntity<>(servicio, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+//
+//    @GetMapping
+//    public ResponseEntity<List<Servicio>> listarTodos() {
+//        return new ResponseEntity<>(servicioService.listarTodos(), HttpStatus.OK);
+//    }
 
     @GetMapping
-    public ResponseEntity<List<Servicio>> listarTodos() {
-        return new ResponseEntity<>(servicioService.listarTodos(), HttpStatus.OK);
+    public List<ServicioResponse> obtenerServicios() {
+        List<Servicio> servicios = servicioService.listarTodos();
+        return servicios.stream()
+                .map(this::convertirARespuesta)
+                .collect(Collectors.toList());
     }
 
-    @GetMapping("/nombre/{nombre}")
+    private ServicioResponse convertirARespuesta(Servicio servicio) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> imagenUrls;
+        try {
+            if (servicio.getImagenUrl() != null) {
+                imagenUrls = objectMapper.readValue(servicio.getImagenUrl(), new TypeReference<List<String>>() {});
+            } else {
+                imagenUrls = Collections.emptyList();
+            }
+        } catch (IOException e) {
+            imagenUrls = Collections.emptyList();
+        }
+        return new ServicioResponse(
+                servicio.getIdServicio(),
+                servicio.getNombre(),
+                servicio.getDescripcion(),
+                servicio.getPrecio(),
+                imagenUrls,
+                servicio.getDisponibilidad(),
+                servicio.getFechaRegistro(),
+                servicio.getFechaActualizacion(),
+                servicio.isEsBorrado(),
+                servicio.getFechaBorrado()
+        );
+    }
+
+
+        @GetMapping("/nombre/{nombre}")
     public ResponseEntity<List<Servicio>> buscarPorNombre(@PathVariable String nombre) {
         return new ResponseEntity<>(servicioService.buscarPorNombre(nombre), HttpStatus.OK);
     }
@@ -89,4 +161,28 @@ public class ServicioController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+//    @PostMapping("/upload")
+//    public String uploadFile(@RequestParam("file") MultipartFile file) {
+//        if (file.isEmpty()) {
+//            return "No se seleccionó ningún archivo";
+//        }
+//
+//        try {
+//            // Crear la carpeta si no existe
+//            Files.createDirectories(Paths.get(UPLOAD_DIR));
+//
+//            // Obtener el nombre original del archivo y asegurarnos de que sea único
+//            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+//            Path filePath = Paths.get(UPLOAD_DIR + fileName);
+//
+//            // Guardar el archivo en la carpeta
+//            Files.write(filePath, file.getBytes());
+//
+//            return "Archivo guardado en: " + filePath.toString();
+//        } catch (IOException e) {
+//            return "Error al subir el archivo: " + e.getMessage();
+//        }
+//    }
+
 } 

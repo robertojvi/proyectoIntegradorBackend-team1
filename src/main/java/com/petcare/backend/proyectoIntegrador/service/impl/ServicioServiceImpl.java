@@ -25,7 +25,7 @@ public class ServicioServiceImpl implements IServicioService {
         servicio.setFechaRegistro(LocalDateTime.now());
         servicio.setFechaActualizacion(LocalDateTime.now());
         servicio.setEsBorrado(false);
-        servicio.setDisponibilidad("DISPONIBLE"); // Valor por defecto
+        servicio.setDisponibilidad("DISPONIBLE");
         return servicioRepository.save(servicio);
     }
     
