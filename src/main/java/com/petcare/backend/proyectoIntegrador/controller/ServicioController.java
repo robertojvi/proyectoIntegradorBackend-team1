@@ -161,28 +161,4 @@ public class ServicioController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-//    @PostMapping("/upload")
-//    public String uploadFile(@RequestParam("file") MultipartFile file) {
-//        if (file.isEmpty()) {
-//            return "No se seleccionó ningún archivo";
-//        }
-//
-//        try {
-//            // Crear la carpeta si no existe
-//            Files.createDirectories(Paths.get(UPLOAD_DIR));
-//
-//            // Obtener el nombre original del archivo y asegurarnos de que sea único
-//            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-//            Path filePath = Paths.get(UPLOAD_DIR + fileName);
-//
-//            // Guardar el archivo en la carpeta
-//            Files.write(filePath, file.getBytes());
-//
-//            return "Archivo guardado en: " + filePath.toString();
-//        } catch (IOException e) {
-//            return "Error al subir el archivo: " + e.getMessage();
-//        }
-//    }
-
 } 
