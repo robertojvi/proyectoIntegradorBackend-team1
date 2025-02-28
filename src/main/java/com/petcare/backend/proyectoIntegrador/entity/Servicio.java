@@ -1,14 +1,16 @@
 package com.petcare.backend.proyectoIntegrador.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-
 /**
  * Entidad que representa un servicio ofrecido en el sistema.
  */
@@ -17,6 +19,7 @@ import java.util.List;
 @Table(name = "servicio")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Servicio {
     
     @Id
@@ -32,8 +35,8 @@ public class Servicio {
     
     @Column(name = "precio")
     private BigDecimal precio;
-    
-    @Column(name = "imagen_url")
+
+    @Column(name = "imagen_url", columnDefinition = "TEXT")
     private String imagenUrl;
     
     @Column(name = "disponibilidad")
@@ -60,4 +63,7 @@ public class Servicio {
 
     @ManyToMany(mappedBy = "favoritos")
     private List<Usuario> usuariosQueLoMarcaron;
-} 
+
+    public Servicio(String nombre, String descripcion, BigDecimal precio, String imagenUrlJson) {
+    }
+}
