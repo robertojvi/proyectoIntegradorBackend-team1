@@ -17,16 +17,9 @@ public class S3Service {
     @Value("${BUCKET_NAME}")
     private String BUCKET_NAME;
 
-//    @Value("${WS_SECRET_ACCESS_KEY}")
-//    private String WS_SECRET_ACCESS_KEY;
-//
-//    @Value("${AWS_ACCESS_KEY_ID}")
-//    private String AWS_ACCESS_KEY_ID;
 
-
-
-    public S3Service(@Value("${AWS_ACCESS_KEY_ID}") String accessKeyId,
-                     @Value("${AWS_SECRET_ACCESS_KEY}") String secretAccessKey) {
+    public S3Service(@Value("${aws.accessKeyId}") String accessKeyId,
+                     @Value("${aws.secretAccessKey}") String secretAccessKey) {
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKeyId, secretAccessKey);
         this.s3 = S3Client.builder()
                 .region(Region.US_EAST_1)

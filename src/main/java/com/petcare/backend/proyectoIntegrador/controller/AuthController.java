@@ -27,4 +27,9 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
+
+    @GetMapping("/env")
+    public String getEnv() {
+        return "AWS_ACCESS_KEY_ID: " + System.getenv("AWS_ACCESS_KEY_ID") + ", AWS_SECRET_ACCESS_KEY: " + System.getenv("AWS_SECRET_ACCESS_KEY");
+    }
 }
