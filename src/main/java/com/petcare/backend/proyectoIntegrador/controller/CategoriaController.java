@@ -34,7 +34,7 @@ public class CategoriaController {
         List<ServicioSinCategoriaResponse> servicios = categoria.getServicios().stream()
                 .map(DtoConverter::convertirARespuestaSinCategoria)
                 .collect(Collectors.toList());
-        return new CategoriaResponse(categoria.getIdCategoria(), categoria.getNombre(), servicios);
+        return new CategoriaResponse(categoria.getId_categoria(), categoria.getNombre(), servicios);
     }
 
     @PostMapping
@@ -58,7 +58,7 @@ public class CategoriaController {
     public ResponseEntity<Categoria> actualizarCategoria(@PathVariable Long id, @RequestBody Categoria categoria) {
         Categoria categoriaExistente = categoriaService.obtenerCategoriaPorId(id);
         if (categoriaExistente != null) {
-            categoria.setIdCategoria(id);
+            categoria.setId_categoria(id);
             Categoria categoriaActualizada = categoriaService.crearCategoria(categoria);
             return new ResponseEntity<>(categoriaActualizada, HttpStatus.OK);
         } else {
