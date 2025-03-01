@@ -1,37 +1,26 @@
 package com.petcare.backend.proyectoIntegrador.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.petcare.backend.proyectoIntegrador.DTO.CategoriaResponse;
 import com.petcare.backend.proyectoIntegrador.DTO.ServicioRequest;
 import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponse;
-import com.petcare.backend.proyectoIntegrador.DTO.ServicioSinCategoriaResponse;
 import com.petcare.backend.proyectoIntegrador.config.S3Service;
-import com.petcare.backend.proyectoIntegrador.entity.Categoria;
 import com.petcare.backend.proyectoIntegrador.entity.Servicio;
 import com.petcare.backend.proyectoIntegrador.service.IServicioService;
 import com.petcare.backend.proyectoIntegrador.service.impl.ServicioServiceImpl;
 import com.petcare.backend.proyectoIntegrador.util.DtoConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static com.petcare.backend.proyectoIntegrador.util.DtoConverter.convertirARespuesta;
-import static com.petcare.backend.proyectoIntegrador.util.DtoConverter.convertirARespuestaSinCategoria;
 
 @RestController
 @RequestMapping("api/servicios")
@@ -104,26 +93,12 @@ public class ServicioController {
                 .collect(Collectors.toList());
     }
 
-//    @PostMapping
-//    public ResponseEntity<ServicioResponse> registrarServicio(@RequestBody ServicioRequest servicioRequest) {
-//        Producto producto = productoService.registrarProducto(productoRequest);
-//        ProductoResponse respuesta = convertirAProductoResponse(producto);
-//        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
-//    }
-
     @PutMapping("/{servicioId}/categorias/{categoriaId}")
     public ResponseEntity<ServicioResponse> asignarCategoriaAServicio(@PathVariable short servicioId, @PathVariable Long categoriaId) {
         Servicio servicio = servicioService.asignarCategoria(servicioId, categoriaId);
         ServicioResponse respuesta = convertirARespuesta(servicio);
         return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
-
-
-
-
-
-
-
 
 
 
