@@ -2,12 +2,16 @@ package com.petcare.backend.proyectoIntegrador.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.petcare.backend.proyectoIntegrador.DTO.CategoriaResponse;
 import com.petcare.backend.proyectoIntegrador.DTO.ServicioRequest;
 import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponse;
+import com.petcare.backend.proyectoIntegrador.DTO.ServicioSinCategoriaResponse;
 import com.petcare.backend.proyectoIntegrador.config.S3Service;
+import com.petcare.backend.proyectoIntegrador.entity.Categoria;
 import com.petcare.backend.proyectoIntegrador.entity.Servicio;
 import com.petcare.backend.proyectoIntegrador.service.IServicioService;
 import com.petcare.backend.proyectoIntegrador.service.impl.ServicioServiceImpl;
+import com.petcare.backend.proyectoIntegrador.util.DtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.petcare.backend.proyectoIntegrador.util.DtoConverter.convertirARespuesta;
+import static com.petcare.backend.proyectoIntegrador.util.DtoConverter.convertirARespuestaSinCategoria;
 
 @RestController
 @RequestMapping("api/servicios")
@@ -72,6 +79,7 @@ public class ServicioController {
             servicio.setDescripcion(servicioDTO.getDescripcion());
             servicio.setPrecio(servicioDTO.getPrecio());
             servicio.setImagenUrl(imagenUrlJson);
+            servicio.setCategoria(servicioDTO.getCategoria());
 
             servicioService.crear(servicio);
 
@@ -82,50 +90,44 @@ public class ServicioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Servicio> obtenerPorId(@PathVariable Short id) {
-        return servicioService.obtenerPorId(id)
-                .map(servicio -> new ResponseEntity<>(servicio, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<ServicioResponse> obtenerServicioPorId(@PathVariable Short id) {
+        Servicio servicio = servicioService.obtenerPorId(id).orElseThrow();
+        ServicioResponse respuesta = convertirARespuesta(servicio);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
-//
-//    @GetMapping
-//    public ResponseEntity<List<Servicio>> listarTodos() {
-//        return new ResponseEntity<>(servicioService.listarTodos(), HttpStatus.OK);
-//    }
 
     @GetMapping
     public List<ServicioResponse> obtenerServicios() {
         List<Servicio> servicios = servicioService.listarTodos();
         return servicios.stream()
-                .map(this::convertirARespuesta)
+                .map(DtoConverter::convertirARespuesta)
                 .collect(Collectors.toList());
     }
 
-    private ServicioResponse convertirARespuesta(Servicio servicio) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<String> imagenUrls;
-        try {
-            if (servicio.getImagenUrl() != null) {
-                imagenUrls = objectMapper.readValue(servicio.getImagenUrl(), new TypeReference<List<String>>() {});
-            } else {
-                imagenUrls = Collections.emptyList();
-            }
-        } catch (IOException e) {
-            imagenUrls = Collections.emptyList();
-        }
-        return new ServicioResponse(
-                servicio.getIdServicio(),
-                servicio.getNombre(),
-                servicio.getDescripcion(),
-                servicio.getPrecio(),
-                imagenUrls,
-                servicio.getDisponibilidad(),
-                servicio.getFechaRegistro(),
-                servicio.getFechaActualizacion(),
-                servicio.isEsBorrado(),
-                servicio.getFechaBorrado()
-        );
+//    @PostMapping
+//    public ResponseEntity<ServicioResponse> registrarServicio(@RequestBody ServicioRequest servicioRequest) {
+//        Producto producto = productoService.registrarProducto(productoRequest);
+//        ProductoResponse respuesta = convertirAProductoResponse(producto);
+//        return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
+//    }
+
+    @PutMapping("/{servicioId}/categorias/{categoriaId}")
+    public ResponseEntity<ServicioResponse> asignarCategoriaAServicio(@PathVariable short servicioId, @PathVariable Long categoriaId) {
+        Servicio servicio = servicioService.asignarCategoria(servicioId, categoriaId);
+        ServicioResponse respuesta = convertirARespuesta(servicio);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
         @GetMapping("/nombre/{nombre}")

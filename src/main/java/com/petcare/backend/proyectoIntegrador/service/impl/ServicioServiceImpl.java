@@ -1,6 +1,8 @@
 package com.petcare.backend.proyectoIntegrador.service.impl;
 
+import com.petcare.backend.proyectoIntegrador.entity.Categoria;
 import com.petcare.backend.proyectoIntegrador.entity.Servicio;
+import com.petcare.backend.proyectoIntegrador.repository.ICategoriaRepository;
 import com.petcare.backend.proyectoIntegrador.repository.IServicioRepository;
 import com.petcare.backend.proyectoIntegrador.service.IServicioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +17,11 @@ import java.util.Optional;
 public class ServicioServiceImpl implements IServicioService {
 
     private final IServicioRepository servicioRepository;
+    private final ICategoriaRepository categoriaRepository;
 
-    ServicioServiceImpl(IServicioRepository servicioRepository) {
+    ServicioServiceImpl(IServicioRepository servicioRepository, ICategoriaRepository categoriaRepository) {
         this.servicioRepository = servicioRepository;
+        this.categoriaRepository = categoriaRepository;
     }
     
     @Override
@@ -38,8 +42,18 @@ public class ServicioServiceImpl implements IServicioService {
     public List<Servicio> listarTodos() {
         return servicioRepository.findActivos();
     }
-    
-    @Override
+
+    public Servicio asignarCategoria(short idServicio, Long categoriaId) {
+        Servicio servicio = servicioRepository.findById(idServicio).orElseThrow();
+        Categoria categoria = categoriaRepository.findById(categoriaId).orElseThrow();
+        servicio.setCategoria(categoria);
+        return servicioRepository.save(servicio);
+    }
+
+
+
+
+        @Override
     public List<Servicio> buscarPorNombre(String nombre) {
         return servicioRepository.findByNombre(nombre);
     }
