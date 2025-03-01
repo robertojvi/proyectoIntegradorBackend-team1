@@ -1,5 +1,6 @@
 package com.petcare.backend.proyectoIntegrador.DTO;
 
+import com.petcare.backend.proyectoIntegrador.entity.Categoria;
 import com.petcare.backend.proyectoIntegrador.entity.Servicio;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class ServicioResponse {
     private LocalDateTime fechaActualizacion;
     private boolean esBorrado;
     private LocalDateTime fechaBorrado;
+    private Categoria categoria;
 
     public ServicioResponse(Servicio servicio) {
     }

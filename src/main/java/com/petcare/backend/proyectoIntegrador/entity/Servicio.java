@@ -1,5 +1,6 @@
 package com.petcare.backend.proyectoIntegrador.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -53,13 +54,18 @@ public class Servicio {
     
     @Column(name = "fecha_borrado")
     private LocalDateTime fechaBorrado;
-    
+
     @OneToMany(mappedBy = "servicio")
     private List<DetallePedido> detallePedidos;
     
     @ManyToOne
     @JoinColumn(name = "id_establecimiento")
     private Establecimiento establecimiento;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_categoria")
+    @JsonIgnore
+    private Categoria categoria;
 
     @ManyToMany(mappedBy = "favoritos")
     private List<Usuario> usuariosQueLoMarcaron;

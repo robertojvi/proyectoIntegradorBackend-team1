@@ -9,6 +9,8 @@ public interface IServicioService {
     Servicio crear(Servicio servicio);
     Optional<Servicio> obtenerPorId(Short id);
     List<Servicio> listarTodos();
+    Servicio asignarCategoria(short idServicio, Long idCategoria);
+
     List<Servicio> buscarPorNombre(String nombre);
     List<Servicio> buscarPorDisponibilidad(String disponibilidad);
     List<Servicio> buscarPorPrecioMenorIgual(BigDecimal precioMaximo);
