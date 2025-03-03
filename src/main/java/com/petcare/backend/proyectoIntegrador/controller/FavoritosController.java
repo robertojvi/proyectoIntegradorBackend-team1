@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/favoritos")
+@CrossOrigin(origins = "*")
 public class FavoritosController {
 
     private final IUsuarioService usuarioService;
