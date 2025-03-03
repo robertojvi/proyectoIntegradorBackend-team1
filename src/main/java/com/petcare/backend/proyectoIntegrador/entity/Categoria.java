@@ -3,11 +3,13 @@ package com.petcare.backend.proyectoIntegrador.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
+@Data
 @Entity
 @Table(name = "categoria")
 @Setter
