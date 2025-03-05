@@ -50,6 +50,9 @@ public class ServicioServiceImpl implements IServicioService {
         return servicioRepository.save(servicio);
     }
 
+    public List<Servicio> filtrarServicios(String categoria) {
+        return servicioRepository.findByCategoria(categoria);
+    }
 
 
 

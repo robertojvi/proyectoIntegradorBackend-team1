@@ -18,7 +18,9 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import static com.petcare.backend.proyectoIntegrador.util.DtoConverter.convertirARespuesta;
 
@@ -86,12 +88,32 @@ public class ServicioController {
     }
 
     @GetMapping
-    public List<ServicioResponse> obtenerServicios() {
+    public Map<String, Object> obtenerServicios(@RequestParam(required = false) List<Long> categoriaIds) {
         List<Servicio> servicios = servicioService.listarTodos();
-        return servicios.stream()
+
+        // Filtrar por IDs de categoría si se proporcionan
+        List<Servicio> serviciosFiltrados = (categoriaIds != null && !categoriaIds.isEmpty())
+                ? servicios.stream()
+                .filter(servicio -> servicio.getCategoria().getId_categoria() != null &&
+                        categoriaIds.contains(servicio.getCategoria().getId_categoria()))
+                .collect(Collectors.toList())
+                : servicios;
+
+        // Convertir a DTO
+        List<ServicioResponse> respuesta = serviciosFiltrados.stream()
                 .map(DtoConverter::convertirARespuesta)
                 .collect(Collectors.toList());
+
+        // Crear respuesta con datos adicionales
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("totalServicios", servicios.size());
+        resultado.put("serviciosFiltrados", respuesta.size());
+        resultado.put("listaServicios", respuesta);
+
+        return resultado;
     }
+
+
 
     @PutMapping("/{servicioId}/categorias/{categoriaId}")
     public ResponseEntity<ServicioResponse> asignarCategoriaAServicio(@PathVariable short servicioId, @PathVariable Long categoriaId) {
@@ -101,6 +123,14 @@ public class ServicioController {
     }
 
 
+//    @GetMapping
+//    public List<Servicio> obtenerServicios(@RequestParam(required = false) String categoria) {
+//        if (categoria != null) {
+//            return servicioService.filtrarServicios(categoria);
+//        } else {
+//            return servicioService.obtenerServicios();
+//        }
+//    }
 
 
 
