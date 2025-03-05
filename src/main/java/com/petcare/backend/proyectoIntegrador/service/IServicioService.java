@@ -10,6 +10,8 @@ public interface IServicioService {
     Optional<Servicio> obtenerPorId(Short id);
     List<Servicio> listarTodos();
     Servicio asignarCategoria(short idServicio, Long idCategoria);
+    List<Servicio> filtrarServicios(String categoria);
+
 
     List<Servicio> buscarPorNombre(String nombre);
     List<Servicio> buscarPorDisponibilidad(String disponibilidad);

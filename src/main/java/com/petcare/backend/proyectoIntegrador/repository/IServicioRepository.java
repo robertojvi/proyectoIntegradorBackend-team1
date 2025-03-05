@@ -10,6 +10,11 @@ import java.util.List;
 
 @Repository
 public interface IServicioRepository extends JpaRepository<Servicio, Short> {
+
+    @Query("SELECT s FROM Servicio s WHERE (:categoria IS NULL OR s.categoria = :categoria)")
+    List<Servicio> findByCategoria(@Param("categoria") String categoria);
+
+
     @Query("SELECT s FROM Servicio s WHERE s.nombre LIKE %:nombre%")
     List<Servicio> findByNombre(String nombre);
     
