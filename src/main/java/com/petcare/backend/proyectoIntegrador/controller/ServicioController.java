@@ -96,7 +96,7 @@ public class ServicioController {
                 ? servicios.stream()
                 .filter(servicio -> servicio.getCategoria().getId_categoria() != null &&
                         categoriaIds.contains(servicio.getCategoria().getId_categoria()))
-                .collect(Collectors.toList())
+                .toList()
                 : servicios;
 
         // Convertir a DTO
@@ -114,7 +114,6 @@ public class ServicioController {
     }
 
 
-
     @PutMapping("/{servicioId}/categorias/{categoriaId}")
     public ResponseEntity<ServicioResponse> asignarCategoriaAServicio(@PathVariable short servicioId, @PathVariable Long categoriaId) {
         Servicio servicio = servicioService.asignarCategoria(servicioId, categoriaId);
@@ -123,14 +122,12 @@ public class ServicioController {
     }
 
 
-//    @GetMapping
-//    public List<Servicio> obtenerServicios(@RequestParam(required = false) String categoria) {
-//        if (categoria != null) {
-//            return servicioService.filtrarServicios(categoria);
-//        } else {
-//            return servicioService.obtenerServicios();
-//        }
-//    }
+    @PostMapping("/{servicioId}/calificar")
+    public ResponseEntity<?> calificarServicio(@PathVariable short servicioId, @RequestBody int calificacion) {
+        servicioService.calificarServicio(servicioId, calificacion);
+        return ResponseEntity.ok("Calificación añadida");
+    }
+
 
 
 

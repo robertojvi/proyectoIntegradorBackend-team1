@@ -8,6 +8,11 @@ import com.petcare.backend.proyectoIntegrador.entity.ERole;
 import com.petcare.backend.proyectoIntegrador.entity.Usuario;
 import com.petcare.backend.proyectoIntegrador.service.IAuthService;
 import com.petcare.backend.proyectoIntegrador.service.IUsuarioService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +25,13 @@ public class AuthServiceImpl implements IAuthService {
     private final IUsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final JavaMailSender mailSender;
 
-
-    public AuthServiceImpl(IUsuarioService usuarioService, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthServiceImpl(IUsuarioService usuarioService, PasswordEncoder passwordEncoder, JwtService jwtService, JavaMailSender mailSender) {
         this.usuarioService = usuarioService;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -63,5 +69,17 @@ public class AuthServiceImpl implements IAuthService {
 
         String token = jwtService.generateToken(usuario.get().getEmail());
         return new AuthResponse(token, usuario.get().getRole(), usuario.get().getNombre(), usuario.get().getApellido(), "Usuario autenticado correctamente", null);
+    }
+
+    @Override
+    public void enviarCorreoConfirmacion(String to, String subject, String htmlContent) throws MessagingException {
+        MimeMessage mensaje = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mensaje, true);
+
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlContent, true);
+
+        mailSender.send(mensaje);
     }
 }

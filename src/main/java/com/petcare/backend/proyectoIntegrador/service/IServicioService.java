@@ -11,6 +11,7 @@ public interface IServicioService {
     List<Servicio> listarTodos();
     Servicio asignarCategoria(short idServicio, Long idCategoria);
     List<Servicio> filtrarServicios(String categoria);
+    void calificarServicio(short id, int calificacion);
 
 
     List<Servicio> buscarPorNombre(String nombre);
