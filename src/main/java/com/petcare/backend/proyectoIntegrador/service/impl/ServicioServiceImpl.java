@@ -50,8 +50,31 @@ public class ServicioServiceImpl implements IServicioService {
         return servicioRepository.save(servicio);
     }
 
+    @Override
     public List<Servicio> filtrarServicios(String categoria) {
         return servicioRepository.findByCategoria(categoria);
+    }
+
+    @Override
+    public void calificarServicio(short id, int calificacion) {
+        // Validar que la calificación esté en el rango permitido (1 a 5)
+        if (calificacion < 1 || calificacion > 5) {
+            throw new IllegalArgumentException("La calificación debe estar entre 1 y 5");
+        }
+
+        Servicio servicio = servicioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+
+        // Calcular el nuevo rating
+        double nuevoRating;
+        if (servicio.getTotalValoraciones() == 0) nuevoRating = calificacion;
+        else
+            nuevoRating = (servicio.getRating() * servicio.getTotalValoraciones() + calificacion) / (servicio.getTotalValoraciones() + 1);
+
+        servicio.setTotalValoraciones(servicio.getTotalValoraciones() + 1);
+        servicio.setRating(nuevoRating);
+
+        servicioRepository.save(servicio);
     }
 
 

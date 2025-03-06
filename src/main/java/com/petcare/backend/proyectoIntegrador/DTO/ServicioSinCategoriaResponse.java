@@ -20,8 +20,9 @@ public class ServicioSinCategoriaResponse {
     private LocalDateTime fechaActualizacion;
     private boolean esBorrado;
     private LocalDateTime fechaBorrado;
+    private double rating;
 
-    public ServicioSinCategoriaResponse(short idServicio, String nombre, String descripcion, BigDecimal precio, List<String> imagenUrls, String disponibilidad, LocalDateTime fechaRegistro, LocalDateTime fechaActualizacion, boolean esBorrado, LocalDateTime fechaBorrado) {
+    public ServicioSinCategoriaResponse(short idServicio, String nombre, String descripcion, BigDecimal precio, List<String> imagenUrls, String disponibilidad, LocalDateTime fechaRegistro, LocalDateTime fechaActualizacion, boolean esBorrado, LocalDateTime fechaBorrado, double rating) {
         this.idServicio = idServicio;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -32,5 +33,6 @@ public class ServicioSinCategoriaResponse {
         this.fechaActualizacion = fechaActualizacion;
         this.esBorrado = esBorrado;
         this.fechaBorrado = fechaBorrado;
+        this.rating = rating;
     }
 }

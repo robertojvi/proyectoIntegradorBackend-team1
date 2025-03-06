@@ -55,6 +55,12 @@ public class Servicio {
     @Column(name = "fecha_borrado")
     private LocalDateTime fechaBorrado;
 
+    @Column(name = "rating")
+    private double rating;
+
+    @Column(name = "total_valoraciones")
+    private int totalValoraciones;
+
     @OneToMany(mappedBy = "servicio")
     private List<DetallePedido> detallePedidos;
     

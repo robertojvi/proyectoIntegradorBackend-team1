@@ -35,7 +35,8 @@ public class DtoConverter {
                 servicio.getFechaActualizacion(),
                 servicio.isEsBorrado(),
                 servicio.getFechaBorrado(),
-                servicio.getCategoria()
+                servicio.getCategoria(),
+                servicio.getRating()
         );
     }
 
@@ -61,7 +62,8 @@ public class DtoConverter {
                 servicio.getFechaRegistro(),
                 servicio.getFechaActualizacion(),
                 servicio.isEsBorrado(),
-                servicio.getFechaBorrado()
+                servicio.getFechaBorrado(),
+                servicio.getRating()
         );
     }
 
