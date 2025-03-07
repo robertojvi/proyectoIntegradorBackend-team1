@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -56,10 +57,10 @@ public class Servicio {
     private LocalDateTime fechaBorrado;
 
     @Column(name = "rating")
-    private double rating;
+    private Double rating;
 
     @Column(name = "total_valoraciones")
-    private int totalValoraciones;
+    private Integer totalValoraciones;
 
     @OneToMany(mappedBy = "servicio")
     private List<DetallePedido> detallePedidos;
