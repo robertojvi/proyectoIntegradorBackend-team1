@@ -22,7 +22,7 @@ public class ServicioSinCategoriaResponse {
     private LocalDateTime fechaBorrado;
     private double rating;
 
-    public ServicioSinCategoriaResponse(short idServicio, String nombre, String descripcion, BigDecimal precio, List<String> imagenUrls, String disponibilidad, LocalDateTime fechaRegistro, LocalDateTime fechaActualizacion, boolean esBorrado, LocalDateTime fechaBorrado, double rating) {
+    public ServicioSinCategoriaResponse(short idServicio, String nombre, String descripcion, BigDecimal precio, List<String> imagenUrls, String disponibilidad, LocalDateTime fechaRegistro, LocalDateTime fechaActualizacion, boolean esBorrado, LocalDateTime fechaBorrado, Double rating) {
         this.idServicio = idServicio;
         this.nombre = nombre;
         this.descripcion = descripcion;

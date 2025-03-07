@@ -25,7 +25,7 @@ public class ServicioResponse {
     private boolean esBorrado;
     private LocalDateTime fechaBorrado;
     private Categoria categoria;
-    private double rating;
+    private Double rating;
 
     public ServicioResponse(Servicio servicio) {
     }
