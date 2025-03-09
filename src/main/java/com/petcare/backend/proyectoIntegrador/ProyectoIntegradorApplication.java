@@ -14,18 +14,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 @EnableTransactionManagement
 public class ProyectoIntegradorApplication {
 
-	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
-		
-		System.setProperty("spring.datasource.url", "jdbc:mysql://" + dotenv.get("DB_HOST") + ":3306/"
-				+ dotenv.get("DB_NAME")
-				+ "?createDatabaseIfNotExist=true&useSSL=false&useLegacyDatetimeCode=false&allowPublicKeyRetrieval=true");
-		System.setProperty("spring.datasource.username", dotenv.get("DB_USER"));
-		System.setProperty("spring.datasource.password", dotenv.get("DB_PASSWORD"));
-		System.setProperty("jwt.secret", dotenv.get("JWT_SECRET"));
-		System.setProperty("aws.accessKeyId", dotenv.get("AWS_ACCESS_KEY_ID"));
-		System.setProperty("aws.secretAccessKey", dotenv.get("AWS_SECRET_ACCESS_KEY"));
-		
+	public static void main(String[] args) {		
 		SpringApplication.run(ProyectoIntegradorApplication.class, args);
 	}
 
