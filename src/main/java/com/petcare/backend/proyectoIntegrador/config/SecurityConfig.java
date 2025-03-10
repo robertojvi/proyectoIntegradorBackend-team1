@@ -33,8 +33,8 @@ public class SecurityConfig {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }
-
-    @Value("${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:4173}")
+    
+    @Value("${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://localhost:4173,http://localhost:8080}")
     private String[] allowedOrigins;
 
     @Bean
@@ -64,7 +64,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // Permitir cualquier origen
+        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Content-Disposition"));
         configuration.setExposedHeaders(List.of("Content-Disposition"));
