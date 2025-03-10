@@ -39,7 +39,8 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthFilter = new JwtAuthenticationFilter(jwtService, (UserDetailsService) userDetailsService);
+        JwtAuthenticationFilter jwtAuthFilter = new JwtAuthenticationFilter(jwtService,
+                (UserDetailsService) userDetailsService);
 
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -54,16 +55,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/servicios/**").hasRole("ADMIN")
                         .requestMatchers("/api/categorias/**").hasRole("ADMIN")
                         .requestMatchers("/swagger-ui/**", "/v3/**", "/api/auth/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtAuthFilter, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthFilter,
+                        org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(allowedOrigins));
+        configuration.setAllowedOrigins(List.of("*")); // Permitir cualquier origen
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Content-Disposition"));
         configuration.setExposedHeaders(List.of("Content-Disposition"));
@@ -75,7 +76,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
