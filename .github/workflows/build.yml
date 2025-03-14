@@ -17,8 +17,8 @@ jobs:
 
       - name: Build and Push
         run: |
-          docker build -t ghcr.io/akaidmaru/proyectoIntegradorBackend-team1:latest .
-          docker push ghcr.io/akaidmaru/proyectoIntegradorBackend-team1:latest
+          docker build -t ghcr.io/akaidmaru/proyectointegrador-backend-team1:latest .
+          docker push ghcr.io/akaidmaru/proyectointegrador-backend-team1:latest
 
       - name: Trigger Infra Deployment
         uses: actions/github-script@v6
