@@ -3,6 +3,7 @@ name: Build & Push Backend
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -21,3 +22,15 @@ jobs:
         run: |
           docker build -t ghcr.io/akaidmaru/proyectoIntegradorBackend-team1:latest .
           docker push ghcr.io/akaidmaru/proyectoIntegradorBackend-team1:latest
+
+      - name: Trigger Infra Deployment
+        uses: actions/github-script@v6
+        if: success()
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'akaidmaru',
+              repo: 'infraProyectoIntegrador',
+              workflow_id: 'build-deploy.yml',
+              ref: 'main',
+            });
