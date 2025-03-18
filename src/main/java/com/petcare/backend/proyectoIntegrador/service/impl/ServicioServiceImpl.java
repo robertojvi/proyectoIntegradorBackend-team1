@@ -45,7 +45,7 @@ public class ServicioServiceImpl implements IServicioService {
         logger.info("Servicio saved successfully with ID: {}", savedServicio.getIdServicio());
         // Save the associated ServicioImagen entities (image information)
         List<ServicioImagen> servicioImagenes = imageUrls.stream()
-                .map(url -> new ServicioImagen((Integer) 0, savedServicio, url))
+                .map(url -> new ServicioImagen(null, savedServicio, url))
                 .toList();
 
         servicioImagenRepository.saveAll(servicioImagenes);
