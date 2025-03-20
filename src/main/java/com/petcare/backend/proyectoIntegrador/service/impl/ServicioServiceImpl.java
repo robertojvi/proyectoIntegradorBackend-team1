@@ -115,12 +115,12 @@ public class ServicioServiceImpl implements IServicioService {
     @Override
     public List<Servicio> getFilteredServices(ServiceRequestFilters serviceRF) {
         return servicioRepository.findAll().stream()
-                .filter(servicio -> serviceRF.getServiceName() == null ||
+                .filter(servicio ->
                         (servicio.getNombre() != null && servicio.getNombre().toLowerCase().contains(serviceRF.getServiceName().toLowerCase())))
-                .filter(servicio -> serviceRF.getCategoryName() == null ||
+                .filter(servicio ->
                         (servicio.getCategoria() != null && servicio.getCategoria().getNombre() != null &&
                                 servicio.getCategoria().getNombre().toLowerCase().contains(serviceRF.getCategoryName().toLowerCase())))
-                .filter(servicio -> servicio.getEsDisponible() != null && servicio.getEsDisponible()) // Filter by availability
+                .filter(servicio -> servicio.getEsDisponible() != null && servicio.getEsDisponible()) // Filtrar por disponibilidad
                 .filter(servicio -> {
                     if (serviceRF.getSingleDate() != null) {
                         return isServiceAvailable(servicio, serviceRF.getSingleDate(), serviceRF.getSingleDate());
@@ -129,8 +129,18 @@ public class ServicioServiceImpl implements IServicioService {
                     }
                     return true;
                 })
+                .peek(servicio -> {
+                    // Obtener las fechas reservadas para este servicio
+                    List<Reserva> reservas = reservaRepository.findByServicio(servicio);
+                    List<LocalDate> fechasReservadas = reservas.stream()
+                            .filter(reserva -> !reserva.isEsBorrado() && reserva.getEstado().equalsIgnoreCase("CONFIRMADA"))
+                            .flatMap(reserva -> reserva.getFechas().stream().map(ReservaFecha::getFecha))
+                            .toList();
+                    servicio.setFechasReservadas(fechasReservadas);
+                })
                 .collect(Collectors.toList());
     }
+
 
     private boolean isServiceAvailable(Servicio servicio, LocalDate startDate, LocalDate endDate) {
         // Fetch reservations for the service

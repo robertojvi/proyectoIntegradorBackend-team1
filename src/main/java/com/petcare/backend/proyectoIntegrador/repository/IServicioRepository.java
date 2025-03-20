@@ -29,4 +29,8 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer> {
     @Query("SELECT s.nombre FROM Servicio s WHERE LOWER(s.nombre) LIKE LOWER(CONCAT('%', :query, '%')) AND s.esBorrado = false")
     List<String> findSuggestionsByName(@Param("query") String query);
 
+    @Query("SELECT s FROM Servicio s JOIN FETCH s.categoria c WHERE s.esBorrado = false")
+    List<Servicio> findAllWithCategoria();
+
+
 } 
