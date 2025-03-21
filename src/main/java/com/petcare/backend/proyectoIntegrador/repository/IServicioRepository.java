@@ -1,5 +1,6 @@
 package com.petcare.backend.proyectoIntegrador.repository;
 
+import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponseList;
 import com.petcare.backend.proyectoIntegrador.entity.Servicio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,6 +26,10 @@ public interface IServicioRepository extends JpaRepository<Servicio, Integer> {
 
     @Query("SELECT s FROM Servicio s WHERE s.esBorrado = false")
     List<Servicio> findActivos();
+
+    @Query("SELECT new com.petcare.backend.proyectoIntegrador.DTO.ServicioResponseList(s.idServicio, s.descripcion, s.nombre, c.id_categoria, c.nombre) " +
+           "FROM Servicio s JOIN s.categoria c ")
+    List<ServicioResponseList> findServiciosActivosList();
 
     @Query("SELECT s.nombre FROM Servicio s WHERE LOWER(s.nombre) LIKE LOWER(CONCAT('%', :query, '%')) AND s.esBorrado = false")
     List<String> findSuggestionsByName(@Param("query") String query);
