@@ -1,10 +1,7 @@
 package com.petcare.backend.proyectoIntegrador.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.petcare.backend.proyectoIntegrador.DTO.ServiceRequestFilters;
-import com.petcare.backend.proyectoIntegrador.DTO.ServicioRequest;
-import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponse;
-import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponseList;
+import com.petcare.backend.proyectoIntegrador.DTO.*;
 import com.petcare.backend.proyectoIntegrador.config.S3Service;
 import com.petcare.backend.proyectoIntegrador.entity.CaracteristicaValor;
 import com.petcare.backend.proyectoIntegrador.entity.Caracteristicas;
@@ -124,10 +121,10 @@ public class ServicioController {
 
 
     @GetMapping("/suggestions")
-    public ResponseEntity<List<String>> getSuggestions(@RequestParam(required = false) String query) {
-        List<String> suggestions = servicioService.listarSugerencias(query).stream()
+    public ResponseEntity<List<ServicioResponseSuggestions>> getSuggestions(@RequestParam(required = false) String query) {
+        List<ServicioResponseSuggestions> suggestions = servicioService.listarSugerencias(query).stream()
                 .filter(servicio -> servicio != null &&
-                        servicio.toLowerCase().contains(query.toLowerCase()))
+                        servicio.getCategoriaNombre().toLowerCase().contains(query.toLowerCase()))
                 .limit(10)
                 .collect(Collectors.toList());
 
