@@ -129,7 +129,7 @@ public class ServicioController {
 
 
     @GetMapping("/filters")
-    public ResponseEntity<List<Servicio>> getFilteredServices(
+    public ResponseEntity<List<ServicioResponse>> getFilteredServices(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String feature,
             @RequestParam(required = false) Integer petsQty,
@@ -146,8 +146,11 @@ public class ServicioController {
         serviceRF.setStartDate(startDate);
         serviceRF.setEndDate(endDate);
 
-        // Fetch and return filtered services
-        List<Servicio> serviciosFiltrados = servicioService.getFilteredServices(serviceRF);
+        // Fetch and map to DTO
+        List<ServicioResponse> serviciosFiltrados = servicioService.getFilteredServices(serviceRF).stream()
+                .map(DtoConverter::convertirARespuesta)
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(serviciosFiltrados);
     }
 
