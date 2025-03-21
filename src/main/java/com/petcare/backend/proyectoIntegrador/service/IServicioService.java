@@ -2,6 +2,7 @@ package com.petcare.backend.proyectoIntegrador.service;
 
 import com.petcare.backend.proyectoIntegrador.DTO.ServiceRequestFilters;
 import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponseList;
+import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponseSuggestions;
 import com.petcare.backend.proyectoIntegrador.entity.Servicio;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,7 +15,7 @@ public interface IServicioService {
     Optional<Servicio> obtenerPorId(Integer id);
     List<Servicio> listarTodos();
     List<ServicioResponseList> listarTodosList();
-    List<String> listarSugerencias(String param);
+    List<ServicioResponseSuggestions> listarSugerencias(String param);
     List<Servicio> getFilteredServices(ServiceRequestFilters serviceRequestFilters);
     Servicio asignarCategoria(Integer idServicio, Long idCategoria);
     List<Servicio> filtrarServicios(String categoria);
