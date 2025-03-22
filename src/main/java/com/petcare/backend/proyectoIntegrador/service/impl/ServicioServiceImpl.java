@@ -1,6 +1,8 @@
 package com.petcare.backend.proyectoIntegrador.service.impl;
 
 import com.petcare.backend.proyectoIntegrador.DTO.ServiceRequestFilters;
+import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponseList;
+import com.petcare.backend.proyectoIntegrador.DTO.ServicioResponseSuggestions;
 import com.petcare.backend.proyectoIntegrador.entity.*;
 import com.petcare.backend.proyectoIntegrador.repository.*;
 import com.petcare.backend.proyectoIntegrador.service.IServicioService;
@@ -74,8 +76,13 @@ public class ServicioServiceImpl implements IServicioService {
     }
 
     @Override
-    public List<String> listarSugerencias(String param) {
-        return servicioRepository.findSuggestionsByName(param);
+    public List<ServicioResponseList> listarTodosList() {
+        return servicioRepository.findServiciosActivosList();
+    }
+
+    @Override
+    public List<ServicioResponseSuggestions> listarSugerencias(String param) {
+        return servicioRepository.findSuggestionsByCategoriaName(param);
     }
 
     public Servicio asignarCategoria(Integer idServicio, Long categoriaId) {
